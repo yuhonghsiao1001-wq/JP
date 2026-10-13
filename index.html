@@ -737,8 +737,8 @@
   <!-- 天氣與穿衣提醒 -->
   <div class="section-card">
     <select class="city-select" id="citySelect" onchange="fetchWeather()">
-      <option value="nagoya">🏯 名古屋 (Nagoya) JMA官方數據</option>
-      <option value="fukuoka">🍜 福岡 (Fukuoka) JMA官方數據</option>
+      <option value="nagoya">🏯 名古屋 (Nagoya)</option>
+      <option value="fukuoka">🍜 福岡 (Fukuoka)</option>
     </select>
 
     <div class="day-tabs">
@@ -1019,7 +1019,8 @@
 
         var cityKey = citySelect.value;
         var coord = cityCoords[cityKey] || cityCoords.nagoya;
-        var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + coord.lat + '&longitude=' + coord.lng + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&models=jma_seamless&timezone=Asia%2FTokyo';
+        // 採用 Open-Meteo 最佳整合模型，確保 precipitation_probability_max 能正確取得數值
+        var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + coord.lat + '&longitude=' + coord.lng + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=Asia%2FTokyo';
 
         var fetchPromise = fetch(url).then(function(res) { return res.json(); });
         var timeoutPromise = new Promise(function(_, reject) { setTimeout(function() { reject('timeout'); }, 3000); });
@@ -1030,7 +1031,7 @@
             renderWeather(selectedDayIndex);
           })
           .catch(function(err) {
-            console.warn('天氣讀取超時，已使用備用溫度顯示');
+            console.warn('天氣讀取超時或失敗，使用備用預報');
           });
       } catch(e) { console.error(e); }
     }
@@ -1041,11 +1042,24 @@
         var daily = data.daily;
         if (daily && daily.temperature_2m_min) {
           for (var i = 0; i < 3; i++) {
+            var rawPop = daily.precipitation_probability_max ? daily.precipitation_probability_max[i] : null;
+            var code = daily.weathercode ? daily.weathercode[i] : 1;
+            
+            // 降雨機率保護：若 API 傳 null 或 undefined，依天氣代碼估算
+            var popVal = 0;
+            if (rawPop !== null && rawPop !== undefined) {
+              popVal = Math.round(rawPop);
+            } else if (code >= 51) {
+              popVal = 70;
+            } else if (code >= 1 && code <= 3) {
+              popVal = 20;
+            }
+
             result.push({
               tempMin: Math.round(daily.temperature_2m_min[i] || 15),
               tempMax: Math.round(daily.temperature_2m_max[i] || 22),
-              pop: daily.precipitation_probability_max ? (daily.precipitation_probability_max[i] || 0) : 10,
-              code: daily.weathercode ? (daily.weathercode[i] || 1) : 1
+              pop: popVal,
+              code: code
             });
           }
         }
