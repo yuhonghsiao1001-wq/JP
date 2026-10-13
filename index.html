@@ -288,44 +288,6 @@
       margin-top: 4px;
     }
 
-    /* 餐廳卡片 */
-    .restaurant-card {
-      background: #FFF;
-      border: 2px solid var(--border-color);
-      border-radius: 14px;
-      padding: 12px;
-      margin-bottom: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-    }
-
-    .res-name {
-      font-size: 0.95rem;
-      font-weight: 900;
-      color: var(--accent-orange);
-      margin-bottom: 4px;
-    }
-
-    .res-info {
-      font-size: 0.78rem;
-      color: var(--light-text);
-      font-weight: 700;
-      margin-bottom: 6px;
-    }
-
-    .nav-btn {
-      display: inline-block;
-      width: 100%;
-      text-align: center;
-      background: #EBF4FC;
-      color: #5B9BD5;
-      border: 1px solid #D0E3F7;
-      padding: 5px;
-      border-radius: 8px;
-      font-size: 0.78rem;
-      font-weight: 900;
-      text-decoration: none;
-    }
-
     .trip-counter-badge {
       display: inline-block;
       background: var(--soft-yellow);
@@ -654,11 +616,6 @@
         <span>🆘 緊急聯絡電話</span>
         <span>❯</span>
       </button>
-
-      <button class="drawer-nav-btn" onclick="showDrawerPage('food')">
-        <span>🍽️ 附近好吃的</span>
-        <span>❯</span>
-      </button>
     </div>
 
     <!-- 抽屜子頁面：星宇航空航班資訊 -->
@@ -774,19 +731,6 @@
         <div class="emergency-title">🍜 駐福岡辦事處（含福岡）</div>
         <div class="emergency-item"><b>緊急電話：</b>090-1922-5740</div>
         <a href="tel:09019225740" class="call-btn">📞 撥打福岡辦事處</a>
-      </div>
-    </div>
-
-    <!-- 抽屜子頁面 2：附近好吃的 -->
-    <div id="drawerFoodPage" style="display: none;">
-      <button class="back-menu-btn" onclick="showDrawerPage('main')">← 返回主選單</button>
-
-      <button class="action-btn" style="margin-bottom: 12px; font-size: 0.85rem; padding: 10px;" onclick="getLocationAndSearch()">🎯 定位並搜尋周邊美食</button>
-
-      <div id="restaurantList">
-        <div style="text-align: center; font-size: 0.82rem; color: var(--light-text); font-weight: 700; margin-top: 10px;">
-          點擊上方按鈕開啟 GPS 定位，自動探索 800m 內的美味餐廳！
-        </div>
       </div>
     </div>
   </div>
@@ -912,13 +856,11 @@
       try {
         var mainPage = document.getElementById('drawerMainPage');
         var emergencyPage = document.getElementById('drawerEmergencyPage');
-        var foodPage = document.getElementById('drawerFoodPage');
         var flightPage = document.getElementById('drawerFlightPage');
         var title = document.getElementById('drawerTitle');
 
         if (mainPage) mainPage.style.display = 'none';
         if (emergencyPage) emergencyPage.style.display = 'none';
-        if (foodPage) foodPage.style.display = 'none';
         if (flightPage) flightPage.style.display = 'none';
 
         if (pageName === 'main' && mainPage) {
@@ -930,74 +872,10 @@
         } else if (pageName === 'emergency' && emergencyPage) {
           emergencyPage.style.display = 'block';
           if (title) title.textContent = '🆘 緊急求助電話';
-        } else if (pageName === 'food' && foodPage) {
-          foodPage.style.display = 'block';
-          if (title) title.textContent = '🍽️ 附近好吃的';
         }
       } catch (err) {
         console.error(err);
       }
-    }
-
-    function getLocationAndSearch() {
-      var listDiv = document.getElementById('restaurantList');
-      if (!listDiv) return;
-      listDiv.innerHTML = '<div style="text-align:center; font-size:0.85rem; font-weight:700; color:var(--accent-orange); margin-top:15px;">正在定位並搜尋周邊美食...📍</div>';
-
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          function(position) {
-            var lat = position.coords.latitude;
-            var lng = position.coords.longitude;
-            searchNearbyRestaurants(lat, lng);
-          },
-          function(error) {
-            alert('無法取得定位，請確認手機瀏覽器已允許 GPS 定位權限！');
-            listDiv.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:#D85A75; margin-top:10px;">定位失敗，請允許讀取位置。</div>';
-          },
-          { timeout: 8000 }
-        );
-      } else {
-        alert('您的瀏覽器不支援地理定位功能。');
-      }
-    }
-
-    function searchNearbyRestaurants(lat, lng) {
-      var radius = 800;
-      var query = '[out:json];node(around:' + radius + ',' + lat + ',' + lng + ')[amenity=restaurant];out 10;';
-      var url = 'https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(query);
-
-      fetch(url)
-        .then(function(res) { return res.json(); })
-        .then(function(data) {
-          var listDiv = document.getElementById('restaurantList');
-          if (!listDiv) return;
-          listDiv.innerHTML = '';
-
-          if (!data.elements || data.elements.length === 0) {
-            listDiv.innerHTML = '<div style="text-align:center; font-size:0.85rem; color:var(--light-text); font-weight:700; margin-top:10px;">附近 800m 內未找到公開餐廳資料 😅</div>';
-            return;
-          }
-
-          data.elements.forEach(function(place) {
-            var name = (place.tags && place.tags.name) ? place.tags.name : "在地美味餐館";
-            var cuisine = (place.tags && place.tags.cuisine) ? place.tags.cuisine : "日本料理";
-            var mapLink = 'https://www.google.com/maps/search/?api=1&query=' + place.lat + ',' + place.lon;
-
-            var cardHtml = 
-              '<div class="restaurant-card">' +
-                '<div class="res-name">🍱 ' + name + '</div>' +
-                '<div class="res-info">類別：' + cuisine + '</div>' +
-                '<a class="nav-btn" href="' + mapLink + '" target="_blank" rel="noopener noreferrer">🗺️ Google 地圖導航</a>' +
-              '</div>';
-            listDiv.innerHTML += cardHtml;
-          });
-        })
-        .catch(function(err) {
-          console.error(err);
-          var listDiv = document.getElementById('restaurantList');
-          if (listDiv) listDiv.innerHTML = '<div style="text-align:center; font-size:0.8rem; color:#D85A75; margin-top:10px;">連線失敗，請稍後重試。</div>';
-        });
     }
 
     var quotes = [
@@ -1236,7 +1114,6 @@
       } catch(e) { console.error(e); }
     }
 
-    // 啟動流程
     document.addEventListener('DOMContentLoaded', function() {
       updateTripCounter();
       fetchExchangeRate();
