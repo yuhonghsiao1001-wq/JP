@@ -163,6 +163,7 @@
       justify-content: space-between;
       box-shadow: 0 4px 10px rgba(230, 190, 100, 0.15);
       transition: transform 0.15s;
+      text-decoration: none;
     }
 
     .drawer-nav-btn:active {
@@ -310,7 +311,7 @@
       margin-bottom: 16px;
     }
 
-    /* 應急補給捷徑卡片樣式 */
+    /* 應急補給與叫車捷徑卡片樣式 */
     .quick-locate-section {
       padding: 14px 16px;
     }
@@ -400,6 +401,28 @@
       font-size: 0.68rem;
       color: #62A478;
       font-weight: 700;
+    }
+
+    /* 一鍵叫 Uber 按鈕 */
+    .uber-call-btn {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+      background: #1C1C1E;
+      color: #FFFFFF;
+      border: 1.5px solid #2C2C2E;
+      border-radius: 14px;
+      padding: 10px 14px;
+      text-decoration: none;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+      transition: transform 0.15s, opacity 0.15s;
+      margin-bottom: 8px;
+    }
+
+    .uber-call-btn:active {
+      transform: scale(0.97);
+      opacity: 0.9;
     }
 
     .phrase-ask-btn {
@@ -765,6 +788,38 @@
       transform: scale(0.96);
     }
 
+    /* 版權宣告區塊樣式 */
+    .travel-footer {
+      width: 100%;
+      max-width: 360px;
+      margin-top: 14px;
+      padding: 16px 12px 10px;
+      text-align: center;
+    }
+
+    .footer-divider {
+      width: 50px;
+      height: 3px;
+      background-color: var(--border-color);
+      border-radius: 3px;
+      margin: 0 auto 12px;
+    }
+
+    .copyright-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--text-color);
+      letter-spacing: 0.3px;
+      margin-bottom: 4px;
+    }
+
+    .footer-note {
+      font-size: 0.72rem;
+      font-weight: 500;
+      color: var(--light-text);
+      line-height: 1.4;
+    }
+
     @keyframes float {
       0%, 100% { transform: translateY(0) rotate(0deg); }
       50% { transform: translateY(-6px) rotate(2deg); }
@@ -795,6 +850,11 @@
         <span>✈️ 星宇航空航班資訊</span>
         <span>❯</span>
       </button>
+
+      <a href="https://m.uber.com/ul/?action=setPickup&pickup=my_location" target="_blank" rel="noopener noreferrer" class="drawer-nav-btn">
+        <span>🚕 一鍵叫 Uber 計程車</span>
+        <span>❯</span>
+      </a>
 
       <button class="drawer-nav-btn" onclick="showDrawerPage('emergency')">
         <span>🆘 緊急聯絡電話</span>
@@ -919,12 +979,13 @@
     </div>
   </div>
 
-  <!-- 緊急民生快捷：廁所與超商搜尋 -->
+  <!-- 緊急民生快捷：廁所、超商與叫車 -->
   <div class="section-card quick-locate-section">
     <div class="locate-header">
-      <span>🚻 應急與補給捷徑</span>
-      <small>點擊直接開啟地圖導航</small>
+      <span>🚻 應急與交通捷徑</span>
+      <small>點擊直接開啟導航或叫車</small>
     </div>
+    
     <div class="locate-grid">
       <!-- 找廁所 -->
       <a href="https://www.google.com/maps/search/?api=1&query=近くのトイレ" target="_blank" rel="noopener noreferrer" class="locate-btn toilet-btn">
@@ -935,7 +996,7 @@
         </div>
       </a>
 
-      <!-- 找超商（日本多數超商有廁所兼補給飲水） -->
+      <!-- 找超商 -->
       <a href="https://www.google.com/maps/search/?api=1&query=コンビニ" target="_blank" rel="noopener noreferrer" class="locate-btn konbini-btn">
         <span class="locate-icon">🏪</span>
         <div class="locate-text">
@@ -944,6 +1005,15 @@
         </div>
       </a>
     </div>
+
+    <!-- 一鍵叫 Uber 計程車 -->
+    <a href="https://m.uber.com/ul/?action=setPickup&pickup=my_location" target="_blank" rel="noopener noreferrer" class="uber-call-btn">
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span style="font-size: 1.25rem;">🚕</span>
+        <span style="font-weight: 900; font-size: 0.9rem;">一鍵叫 Uber 計程車</span>
+      </div>
+      <span style="font-size: 0.75rem; font-weight: 700; opacity: 0.85;">定位當前位置 ❯</span>
+    </a>
 
     <!-- 借廁所大字指讀卡 -->
     <button class="phrase-ask-btn" onclick="showToiletHelpModal()">
@@ -1050,6 +1120,17 @@
   </div>
 
   <button class="action-btn" id="drawBtn" onclick="handleDraw()">再抽一張 🎲</button>
+
+  <!-- 底部溫馨版權區塊 -->
+  <footer class="travel-footer">
+    <div class="footer-divider"></div>
+    <p class="copyright-text">
+      © <span id="currentYear"></span> 日本隨行小卡・Made with ❤️ for Mom
+    </p>
+    <p class="footer-note">
+      所有急難救助、地圖定位與匯率數據僅供旅程參考
+    </p>
+  </footer>
 
   <script>
     var currentRate = 0.215;
@@ -1369,6 +1450,8 @@
       updateTripCounter();
       fetchExchangeRate();
       fetchWeather();
+      var yearElem = document.getElementById('currentYear');
+      if (yearElem) yearElem.textContent = new Date().getFullYear();
     });
   </script>
 </body>
