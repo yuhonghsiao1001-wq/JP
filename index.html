@@ -310,6 +310,189 @@
       margin-bottom: 16px;
     }
 
+    /* 應急補給捷徑卡片樣式 */
+    .quick-locate-section {
+      padding: 14px 16px;
+    }
+
+    .locate-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 10px;
+    }
+
+    .locate-header span {
+      font-size: 1rem;
+      font-weight: 900;
+      color: var(--text-color);
+    }
+
+    .locate-header small {
+      font-size: 0.75rem;
+      color: var(--light-text);
+      font-weight: 700;
+    }
+
+    .locate-grid {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 8px;
+    }
+
+    .locate-btn {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 12px;
+      border-radius: 14px;
+      text-decoration: none;
+      border: 2px solid transparent;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+
+    .locate-btn:active {
+      transform: scale(0.96);
+    }
+
+    .toilet-btn {
+      background: #EBF4FC;
+      border-color: #C3DEF7;
+    }
+
+    .toilet-btn .locate-icon {
+      font-size: 1.6rem;
+    }
+
+    .toilet-btn .main-label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: #2F6FAD;
+    }
+
+    .toilet-btn .sub-label {
+      display: block;
+      font-size: 0.68rem;
+      color: #6C94BE;
+      font-weight: 700;
+    }
+
+    .konbini-btn {
+      background: #EAF7EE;
+      border-color: #BBE7C6;
+    }
+
+    .konbini-btn .locate-icon {
+      font-size: 1.6rem;
+    }
+
+    .konbini-btn .main-label {
+      display: block;
+      font-size: 0.88rem;
+      font-weight: 900;
+      color: #2D7A47;
+    }
+
+    .konbini-btn .sub-label {
+      display: block;
+      font-size: 0.68rem;
+      color: #62A478;
+      font-weight: 700;
+    }
+
+    .phrase-ask-btn {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-color);
+      border: 1.5px dashed var(--border-color);
+      border-radius: 12px;
+      padding: 8px 12px;
+      font-size: 0.82rem;
+      font-weight: 900;
+      color: var(--accent-orange);
+      cursor: pointer;
+    }
+
+    .phrase-ask-btn:active {
+      background: var(--soft-yellow);
+    }
+
+    /* 借廁所大字彈窗 */
+    .toilet-modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.65);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 200;
+    }
+
+    .toilet-modal-overlay.active {
+      display: flex;
+    }
+
+    .toilet-modal-card {
+      background: #FFF;
+      border-radius: 20px;
+      padding: 24px 20px;
+      width: 100%;
+      max-width: 320px;
+      text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      position: relative;
+    }
+
+    .modal-close {
+      position: absolute;
+      top: 12px;
+      right: 14px;
+      font-size: 0.85rem;
+      font-weight: 900;
+      color: var(--light-text);
+      cursor: pointer;
+    }
+
+    .modal-label {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--light-text);
+      margin-bottom: 12px;
+    }
+
+    .modal-japanese {
+      font-size: 1.35rem;
+      font-weight: 900;
+      color: #D85A75;
+      background: #FFF5F7;
+      padding: 14px 10px;
+      border-radius: 12px;
+      border: 2px solid #FFD1DC;
+      margin-bottom: 8px;
+      line-height: 1.4;
+    }
+
+    .modal-reading {
+      font-size: 0.72rem;
+      color: #9E8E85;
+      margin-bottom: 6px;
+    }
+
+    .modal-chinese {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: var(--text-color);
+    }
+
+    /* 天氣樣式 */
     .city-select {
       width: 100%;
       padding: 8px 12px;
@@ -411,6 +594,7 @@
       gap: 4px;
     }
 
+    /* 匯率計算器 */
     .currency-header {
       font-size: 1.05rem;
       font-weight: 900;
@@ -474,6 +658,7 @@
       outline: none;
     }
 
+    /* 翻牌小卡 */
     .card-container {
       width: 100%;
       max-width: 360px;
@@ -734,6 +919,50 @@
     </div>
   </div>
 
+  <!-- 緊急民生快捷：廁所與超商搜尋 -->
+  <div class="section-card quick-locate-section">
+    <div class="locate-header">
+      <span>🚻 應急與補給捷徑</span>
+      <small>點擊直接開啟地圖導航</small>
+    </div>
+    <div class="locate-grid">
+      <!-- 找廁所 -->
+      <a href="https://www.google.com/maps/search/?api=1&query=近くのトイレ" target="_blank" rel="noopener noreferrer" class="locate-btn toilet-btn">
+        <span class="locate-icon">🚻</span>
+        <div class="locate-text">
+          <span class="main-label">找附近廁所</span>
+          <span class="sub-label">公園・公廁・車站</span>
+        </div>
+      </a>
+
+      <!-- 找超商（日本多數超商有廁所兼補給飲水） -->
+      <a href="https://www.google.com/maps/search/?api=1&query=コンビニ" target="_blank" rel="noopener noreferrer" class="locate-btn konbini-btn">
+        <span class="locate-icon">🏪</span>
+        <div class="locate-text">
+          <span class="main-label">找附近便利店</span>
+          <span class="sub-label">7-11・全家・Lawson</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- 借廁所大字指讀卡 -->
+    <button class="phrase-ask-btn" onclick="showToiletHelpModal()">
+      <span>🗣️ 向店員借廁所「日語大字卡」</span>
+      <span>👉</span>
+    </button>
+  </div>
+
+  <!-- 借廁所大字彈窗 Modal -->
+  <div class="toilet-modal-overlay" id="toiletModal" onclick="closeToiletHelpModal()">
+    <div class="toilet-modal-card" onclick="event.stopPropagation()">
+      <div class="modal-close" onclick="closeToiletHelpModal()">✕ 關閉</div>
+      <div class="modal-label">請將此畫面直接指給店員看：</div>
+      <div class="modal-japanese">トイレをお借りできますか？</div>
+      <div class="modal-reading">To-i-re o-o-ka-ri de-ki-ma-su-ka?</div>
+      <div class="modal-chinese">請問可以借用一下洗手間嗎？</div>
+    </div>
+  </div>
+
   <!-- 天氣與穿衣提醒 -->
   <div class="section-card">
     <select class="city-select" id="citySelect" onchange="fetchWeather()">
@@ -875,6 +1104,17 @@
       } catch (err) {
         console.error(err);
       }
+    }
+
+    /* 借廁所大字彈窗控制 */
+    function showToiletHelpModal() {
+      var modal = document.getElementById('toiletModal');
+      if (modal) modal.classList.add('active');
+    }
+
+    function closeToiletHelpModal() {
+      var modal = document.getElementById('toiletModal');
+      if (modal) modal.classList.remove('active');
     }
 
     var quotes = [
@@ -1019,7 +1259,6 @@
 
         var cityKey = citySelect.value;
         var coord = cityCoords[cityKey] || cityCoords.nagoya;
-        // 採用 Open-Meteo 最佳整合模型，確保 precipitation_probability_max 能正確取得數值
         var url = 'https://api.open-meteo.com/v1/forecast?latitude=' + coord.lat + '&longitude=' + coord.lng + '&daily=temperature_2m_max,temperature_2m_min,precipitation_probability_max,weathercode&timezone=Asia%2FTokyo';
 
         var fetchPromise = fetch(url).then(function(res) { return res.json(); });
@@ -1045,7 +1284,6 @@
             var rawPop = daily.precipitation_probability_max ? daily.precipitation_probability_max[i] : null;
             var code = daily.weathercode ? daily.weathercode[i] : 1;
             
-            // 降雨機率保護：若 API 傳 null 或 undefined，依天氣代碼估算
             var popVal = 0;
             if (rawPop !== null && rawPop !== undefined) {
               popVal = Math.round(rawPop);
